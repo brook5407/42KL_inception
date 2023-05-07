@@ -5,8 +5,8 @@ RUN apt-get update && \
     nginx openssl && \
     rm -rf /var/lib/apt/lists/*
 
-COPY ./conf/gobal.conf /etc/nginx/conf.d
-COPY ./tools/create_ssl.sh /var/www
+COPY ./conf/global.conf /etc/nginx/conf.d
+COPY ./tools/create_ssl.sh ./var/www/
 
 RUN chmod +x /var/www/create_ssl.sh
 

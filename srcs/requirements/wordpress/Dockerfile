@@ -5,13 +5,13 @@ RUN apt-get update && \
 
 COPY conf/www.conf /etc/php/7.3/fpm/pool.d
 
-COPY ./tools/configure_wordpress.sh /
-RUN chmod 777 configure_wordpress.sh
+COPY ./tools/setup_wordpress.sh /
+RUN chmod +x setup_wordpress.sh
 
 EXPOSE 9000
 
 RUN mkdir -p /run/php
 
-ENTRYPOINT ["./configure_wordpress.sh"]
+ENTRYPOINT ["./setup_wordpress.sh"]
 
 CMD ["/usr/sbin/php-fpm7.3", "-F"]

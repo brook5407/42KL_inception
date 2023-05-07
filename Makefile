@@ -1,6 +1,6 @@
 COMPOSE_YML=./srcs/docker-compose.yml
 WORDPRESS_SRCS=/home/chchin/data/wordpress
-MARIADB_SRCS=/home/chchin/data/wordpressdb
+MARIADB_SRCS=/home/chchin/data/mysql
 VOLUME_COUNT=$(shell sudo docker volume ls -q | wc -l;)
 
 all:
