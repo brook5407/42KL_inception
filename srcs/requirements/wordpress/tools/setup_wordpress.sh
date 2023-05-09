@@ -1,22 +1,24 @@
 #!/bin/sh
+FILE=wordpress
+cd /var/www/html
 
-if [ ! -f /var/www/html/wp-config.php ]; then
-	echo "Wordpress: setting up..."
-	mkdir -p /var/www/html
-	wget https://wordpress.org/latest.tar.gz
-	tar -xzvf latest.tar.gz
-	cp -r  wordpress/* /var/www/html/ && rm -rf wordpress
+if [ -d "$FILE" ]; then
+    echo "$FILE already setup."
+else
+    wp core download --allow-root 
+    wp config create --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_USER --dbpass=$MYSQL_PASSWORD --dbhost=$MYSQL_HOSTNAME --allow-root 
 
-	sed -i "23s/.*/define( 'DB_NAME', '$MYSQL_DATABASE' );/g" /var/www/html/wp-config-sample.php
-	sed -i "26s/.*/define( 'DB_USER', '$MYSQL_USER' );/g" /var/www/html/wp-config-sample.php
-	sed -i "29s/.*/define( 'DB_PASSWORD', '$MYSQL_PASSWORD' );/g" /var/www/html/wp-config-sample.php
-	sed -i "32s/.*/define( 'DB_HOST', '$MYSQL_HOSTNAME' );/g" /var/www/html/wp-config-sample.php
-
-	sed -i "82s/.*/define( 'WP_DEBUG', true );/g" /var/www/html/wp-config-sample.php
-	sed -i "83s/.*/define( 'WP_DEBUG_LOG', true );/g" /var/www/html/wp-config-sample.php
-
-	cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
-	echo "Wordpress: set up!"
+    wp core install --url=$DOMAIN_NAME --title="BROOK's INCEPTION" --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL --allow-root  
+    wp user create $WP_USER $WP_USER_EMAIL --user_pass=$WP_USER_PASSWORD --role=$WP_USER_ROLE --allow-root 
+    wp theme install neve --activate --allow-root  
+    
+    # wp config set WP_REDIS_HOST redis --add --allow-root
+    # wp config set WP_REDIS_PORT 6379 --add --allow-root  
+    # wp config set WP_CACHE true --add --allow-root  
+    # wp plugin install redis-cache --activate --allow-root  
+    # wp plugin update --all --allow-root  
+    wp redis enable --allow-root  
+    echo "$FILE setup successful!" 
 fi
 
-exec "$@"
+/usr/sbin/php-fpm7.3 -F
