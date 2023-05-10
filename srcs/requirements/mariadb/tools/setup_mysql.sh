@@ -1,9 +1,11 @@
-#!/bin/sh
+service mysql start
 
-if [ -d /var/lib/mysql/$MYSQL_DATABASE ]; then
-	echo "$MYSQL_DATABASE exists"
+if test -f /var/lib/mysql/$MYSQL_DATABASE;
+then
+	echo "$MYSQL_DATABASE exist"
 else
-	echo "USE mysql;" > script.sql
+
+    echo "USE mysql;" > script.sql
 	echo "DELETE FROM mysql.user WHERE User='';" >> script.sql
 	echo "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost');" >> script.sql
 	echo "FLUSH PRIVILEGES;" >> script.sql
@@ -20,6 +22,7 @@ else
 
 	mysql_install_db --user=mysql
 	mysqld --user=mysql --bootstrap < script.sql
+    rm -rf script.sql
 fi
 
 exec "$@"
