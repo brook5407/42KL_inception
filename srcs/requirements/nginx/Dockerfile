@@ -4,7 +4,7 @@ RUN apt-get update && \
     apt-get install -y nginx openssl && \
     rm -rf /var/lib/apt/lists/*
 
-COPY ./conf/global.conf /etc/nginx/conf.d
+COPY ./conf/default /etc/nginx/sites-enabled/default
 
 COPY ./tools/create_ssl.sh ./var/www/
 
