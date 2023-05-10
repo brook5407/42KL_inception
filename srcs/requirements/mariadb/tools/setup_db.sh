@@ -3,6 +3,7 @@
 if [ -d /var/lib/mysql/$MYSQL_DATABASE ]; then
 	echo "$MYSQL_DATABASE exists"
 else
+    echo "Creating database $MYSQL_DATABASE"
 	echo "USE mysql;" > script.sql
 	echo "DELETE FROM mysql.user WHERE User='';" >> script.sql
 	echo "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost');" >> script.sql
@@ -20,6 +21,8 @@ else
 
 	mysql_install_db --user=mysql
 	mysqld --user=mysql --bootstrap < script.sql
+    rm -rf script.sql
+    echo "Database $MYSQL_DATABASE created"
 fi
 
 exec "$@"
