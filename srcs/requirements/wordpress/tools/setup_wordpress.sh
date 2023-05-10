@@ -1,24 +1,21 @@
 #!/bin/bash
 
-	sed -i "s/listen = \/run\/php\/php7.3-fpm.sock/listen = 9000/" "/etc/php/7.3/fpm/pool.d/www.conf";
-	chown -R www-data:www-data /var/www/*;
-	chown -R 755 /var/www/*;
-	mkdir -p /run/php/;
-	touch /run/php/php7.3-fpm.pid;
-
-if [ ! -f /var/www/html/wp-config.php ]; then
+if [ -d /var/www/html/wordpress ]; then
 	echo "Wordpress: setting up..."
-	mkdir -p /var/www/html
-	wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar;
-	chmod +x wp-cli.phar; 
-	mv wp-cli.phar /usr/local/bin/wp;
-	cd /var/www/html;
-	wp core download --allow-root;
-    wp config create --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_USER --dbpass=$MYSQL_PASSWORD --dbhost=$MYSQL_HOSTNAME --allow-root 
-	echo "Wordpress: creating users..."
-	wp core install --url=$DOMAIN_NAME --title="BROOK's INCEPTION" --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL --allow-root  
-    wp user create $WP_USER $WP_USER_EMAIL --user_pass=$WP_USER_PASSWORD --role=$WP_USER_ROLE --allow-root 
-    wp theme install neve --activate --allow-root  
+	wget https://wordpress.org/latest.tar.gz
+	tar -xvf latest.tar.gz
+	mv wordpress/* .
+	rm -rf wordpress
+
+	sed -i "s/database_name_here/$MYSQL_DATABASE/g" wp-config-sample.php
+	sed -i "s/username_here/$MYSQL_USER/g" wp-config-sample.php
+	sed -i "s/password_here/$MYSQL_PASSWORD/g" wp-config-sample.php
+	sed -i "s/localhost/$MYSQL_HOSTNAME/g" wp-config-sample.php
+	cp wp-config-sample.php wp-config.php
+
+	wp core install --allow-root --url=$DOMAIN_NAME --title="Inception" --admin_name=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL
+	wp user create $WP_USER $WP_USER_EMAIL --user_pass=$WP_USER_PASSWORD --display_name=$WP_USER --role=$WP_USER_ROLE --allow-root
+
 	echo "Wordpress: set up!"
 fi
 
