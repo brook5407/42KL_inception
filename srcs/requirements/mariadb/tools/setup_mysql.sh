@@ -23,3 +23,5 @@ else
 	mysqld --user=mysql --bootstrap < script.sql
     rm -rf script.sql
 fi
+
+exec "$@"

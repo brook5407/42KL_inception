@@ -5,7 +5,7 @@ if [ -d /var/www/html/wordpress ]; then
 	wget https://wordpress.org/latest.tar.gz
 	tar -xvf latest.tar.gz
 	mv wordpress/* .
-	rm -rf wordpress
+	rm -rf wordpress latest.tar.gz
 
 	sed -i "s/database_name_here/$MYSQL_DATABASE/g" wp-config-sample.php
 	sed -i "s/username_here/$MYSQL_USER/g" wp-config-sample.php

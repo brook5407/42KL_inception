@@ -8,10 +8,10 @@ EXPOSE 3306
 
 COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 
-COPY ./tools/setup_mysql.sh /var/www/
+COPY ./tools/setup_mysql.sh /usr/local/bin/
 
-RUN chmod +x /var/www/setup_mysql.sh
+RUN chmod +x /usr/local/bin/setup_mysql.sh
 
-ENTRYPOINT [ "bash", "/var/www/setup_mysql.sh" ]
+ENTRYPOINT [ "/usr/local/bin/setup_mysql.sh" ]
 
 CMD ["mysqld_safe"]
