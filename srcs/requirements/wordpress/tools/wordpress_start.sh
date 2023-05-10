@@ -14,11 +14,12 @@ if [ ! -f /var/www/html/wp-config.php ]; then
 	cd /var/www/html;
 	wp core download --allow-root;
 	
-	mv /var/www/wp-config.php /var/www/html/
-	sed -i "s/database_name_here/$MYSQL_DATABASE/" /var/www/html/wp-config.php
-	sed -i "s/username_here/$MYSQL_USER/" /var/www/html/wp-config.php
-	sed -i "s/password_here/$MYSQL_PASSWORD/" /var/www/html/wp-config.php
-	sed -i "s/localhost/$MYSQL_HOSTNAME/" /var/www/html/wp-config.php
+	sed -i "s/database_name_here/$MYSQL_DATABASE/" ./wp-config-sample.php
+	sed -i "s/username_here/$MYSQL_USER/" ./wp-config-sample.php
+	sed -i "s/password_here/$MYSQL_PASSWORD/" ./wp-config-sample.php
+	sed -i "s/localhost/$MYSQL_HOSTNAME/" ./wp-config-sample.php
+	cp wp-config-sample.php wp-config.php
+	chown -R www-data:www-data wp-config.php
 
 	echo "Wordpress: creating users..."
 	wp core install --allow-root --url=$DOMAIN_NAME --title="Inception" --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL
