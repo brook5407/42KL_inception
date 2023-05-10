@@ -11,9 +11,7 @@ clean:
 	@docker-compose -f ${COMPOSE_YML} down
 
 fclean: clean
-	@docker rmi -f $$(docker images -q)
-	@docker volume rm $$(docker volume ls -q)
-	@docker network rm srcs_mariadb_data srcs_wordpress_data
+	@docker system prune -a
 	@rm -rf $(WORDPRESS_SRCS) ${MARIADB_SRCS}
 	@echo "Docker: All clean"
 
