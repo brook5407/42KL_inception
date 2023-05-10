@@ -11,11 +11,11 @@ clean:
 	@docker-compose -f ${COMPOSE_YML} down
 
 fclean: clean
-	@docker rmi -f $$(docker images -qa)
+	@docker rmi -f $$(docker images -q)
 	@docker volume rm $$(docker volume ls -q)
 	@docker network rm $$(docker network ls -q)
-	@sudo rm -rf $(WORDPRESS_SRCS) ${MARIADB_SRCS}
-	echo "Docker: All clean"
+	@rm -rf $(WORDPRESS_SRCS) ${MARIADB_SRCS}
+	@echo "Docker: All clean"
 
 re: fclean all
 
