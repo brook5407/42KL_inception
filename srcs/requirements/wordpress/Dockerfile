@@ -7,12 +7,12 @@ RUN apt-get update && \
 EXPOSE 9000
 
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d
-COPY ./tools /var/www/
+COPY ./tools /usr/local/bin
 
 RUN mkdir -p /run/php/
 
-RUN chmod +x /var/www/wordpress_start.sh
+RUN chmod +x /usr/local/bin/wordpress_start.sh
 
-ENTRYPOINT [ "/var/www/wordpress_start.sh" ]
+ENTRYPOINT [ "/usr/local/bin/wordpress_start.sh" ]
 
 CMD ["/usr/sbin/php-fpm7.3", "--nodaemonize"]

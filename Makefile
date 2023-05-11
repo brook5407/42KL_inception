@@ -1,7 +1,6 @@
 COMPOSE_YML=./srcs/docker-compose.yml
 WORDPRESS_SRCS=/home/chchin/data/wordpress
 MARIADB_SRCS=/home/chchin/data/mysql
-VOLUME_COUNT=$(shell sudo docker volume ls -q | wc -l;)
 
 all:
 	@sudo mkdir -p ${WORDPRESS_SRCS} ${MARIADB_SRCS}
@@ -12,9 +11,12 @@ clean:
 
 fclean: clean
 	@docker system prune -a
-	@rm -rf $(WORDPRESS_SRCS) ${MARIADB_SRCS}
+	@sudo rm -rf $(WORDPRESS_SRCS) ${MARIADB_SRCS}
 	@echo "Docker: All clean"
+
+info:
+	@docker-compose -f ${COMPOSE_YML} ps
 
 re: fclean all
 
-.PHONY: all re down clean
+.PHONY: all re down clean fclean info
