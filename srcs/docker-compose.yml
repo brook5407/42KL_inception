@@ -38,8 +38,19 @@ services:
       - inception
     restart: unless-stopped
 
+  #bonus
+  redis:
+    container_name: redis
+    build: requirements/bonus/redis/
+    networks:
+      - inception
+    env_file: 
+      - .env
+    restart: unless-stopped
+
 volumes:
   wordpress_data:
+    name: wp
     driver: local
     driver_opts:
       device: /home/chchin/data/mysql
@@ -47,6 +58,7 @@ volumes:
       o: bind
 
   mariadb_data:
+    name: db
     driver: local
     driver_opts:
       device: /home/chchin/data/wordpress
@@ -55,4 +67,5 @@ volumes:
 
 networks:
   inception:
+    name: inception
     driver: bridge

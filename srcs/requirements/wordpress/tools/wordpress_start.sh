@@ -13,18 +13,23 @@ else
 	cd /var/www/html;
 	wp core download --allow-root;
 	
-	sed -i "s/database_name_here/$MYSQL_DATABASE/" ./wp-config-sample.php
-	sed -i "s/username_here/$MYSQL_USER/" ./wp-config-sample.php
-	sed -i "s/password_here/$MYSQL_PASSWORD/" ./wp-config-sample.php
-	sed -i "s/localhost/$MYSQL_HOSTNAME/" ./wp-config-sample.php
-	cp wp-config-sample.php wp-config.php
-	chown -R www-data:www-data wp-config.php
+	wp config create --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_USER --dbpass=$MYSQL_PASSWORD --dbhost=$MYSQL_HOSTNAME --allow-root 
 
 	echo "Wordpress: Setup wordpress..."
 	wp core install --allow-root --url=$DOMAIN_NAME --title="Inception" --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL
 	wp user create $WP_USER $WP_USER_EMAIL --user_pass=$WP_USER_PASSWORD --display_name=$WP_USER --role=$WP_USER_ROLE --allow-root
+	wp theme install bizboost --activate --allow-root  
 
-	echo "Wordpress: Set up successful!"
+	echo "Wordpress: Setup successful!"
+
+	echo "Redis: Setup wordpress cache..."
+	wp config set WP_REDIS_HOST redis --add --allow-root
+    wp config set WP_REDIS_PORT 6379 --add --allow-root  
+    wp config set WP_CACHE true --add --allow-root 
+	wp plugin install redis-cache --activate --allow-root  
+    wp plugin update --all --allow-root  
+    wp redis enable --allow-root  
+	echo "Redis: Setup successful!"
 fi
 
 exec "$@"
