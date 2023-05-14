@@ -6,7 +6,7 @@ RUN apt-get update && \
 
 EXPOSE 443
 
-COPY ./conf/default /etc/nginx/sites-enabled/default
+COPY ./conf/* /etc/nginx/sites-enabled/
 COPY ./tools/nginx_start.sh /var/www
 
 RUN chmod +x /var/www/nginx_start.sh

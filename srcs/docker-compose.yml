@@ -4,8 +4,10 @@ services:
   nginx:
     container_name: nginx
     build: ./requirements/nginx
+    image: nginx
     depends_on:
       - wordpress
+      - adminer
     ports:
       - 443:443
     volumes:
@@ -17,6 +19,7 @@ services:
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
+    image: wordpress
     depends_on:
       - mariadb
     volumes:
@@ -30,6 +33,7 @@ services:
   mariadb:
     container_name: mariadb
     build: ./requirements/mariadb
+    image: mariadb
     volumes:
       - mariadb_data:/var/lib/mysql
     env_file:
@@ -41,11 +45,68 @@ services:
   #bonus
   redis:
     container_name: redis
-    build: requirements/bonus/redis/
+    build: requirements/bonus/redis
+    image: redis
     networks:
       - inception
-    env_file: 
-      - .env
+    restart: unless-stopped
+
+  adminer:
+    container_name: adminer
+    build: ./requirements/bonus/adminer
+    image: adminer
+    depends_on:
+      - mariadb
+    ports:
+      - 8080:8080
+    networks:
+      - inception
+    restart: unless-stopped
+
+  static:
+    container_name: static
+    build: ./requirements/bonus/static
+    image: static
+    networks:
+      - inception
+    ports:
+      - 1111:1111
+    restart: unless-stopped
+
+  ftp-server:
+    container_name: ftp
+    build: ./requirements/bonus/ftp
+    image: ftp
+    volumes:
+      - wordpress_data:/var/www/wordpress
+    depends_on:
+      - nginx
+    env_file: .env
+    networks:
+      - inception
+    ports:
+      - 20-21:20-21
+      - 40000-40009:40000-40009
+    restart: unless-stopped
+
+  cadvisor:
+    container_name: cadvisor
+    build: ./requirements/bonus/cadvisor
+    image: cadvisor
+    ports:
+      - 8081:8080
+    networks:
+      - inception
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro 
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    privileged: true
+    devices:
+      - /dev/kmsg:/dev/kmsg
+
+
     restart: unless-stopped
 
 volumes:

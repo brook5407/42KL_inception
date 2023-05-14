@@ -3,7 +3,7 @@ FROM debian:buster
 RUN apt-get update && \
     apt-get -y install \
     php7.3 php-mysqli \
-    php-fpm wget sendmail \
+    php-fpm wget \
     default-mysql-client \
     redis php-redis && \
     rm -rf /var/lib/apt/lists/*

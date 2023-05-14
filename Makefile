@@ -4,15 +4,19 @@ MARIADB_SRCS=/home/chchin/data/mysql
 
 all:
 	@sudo mkdir -p ${WORDPRESS_SRCS} ${MARIADB_SRCS}
-	@docker-compose -f ./srcs/docker-compose.yml up --build -d
+	@docker-compose -f ${COMPOSE_YML} up --build -d
 
-clean:
+down:
 	@docker-compose -f ${COMPOSE_YML} down
 
-fclean: clean
+clean: down
 	@docker system prune -a
+	@docker volume rm db wp
+	@echo "Docker service has been reset"
+
+fclean: clean
 	@sudo rm -rf $(WORDPRESS_SRCS) ${MARIADB_SRCS}
-	@echo "Docker: All clean"
+	@echo "Docker storage has been reset"
 
 info:
 	@docker-compose -f ${COMPOSE_YML} ps
