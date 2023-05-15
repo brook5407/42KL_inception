@@ -4,6 +4,7 @@ if [ ! -f "/etc/vsftpd.userlist" ]; then
 
 	mkdir -p /var/www/html
 	mkdir -p /var/run/vsftpd/empty
+	chmod -R 777 /var/www/wordpress
 
 	mv /var/www/vsftpd.conf /etc/vsftpd.conf
 
