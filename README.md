@@ -77,6 +77,25 @@ Bonus list:
 
 ---
 
+## 💻 Usage
+
+```
+Make
+```
+Run the Makefile to build the folder and docker-compose.
+
+```
+Make info
+```
+To check the docker-compose service status
+
+```
+Make fclean
+```
+Remove all docker-composer service and folder that store data.
+
+---
+
 ## 💡 Explaination
 
 ### Docker
